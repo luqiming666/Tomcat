@@ -9,6 +9,8 @@ import android.os.Bundle
 import android.os.Handler
 import android.view.MotionEvent
 import android.view.View
+import android.view.WindowInsets
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import com.richtap.tomcat.databinding.ActivityMainBinding
 
@@ -27,9 +29,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        supportActionBar!!.hide()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        supportActionBar!!.hide()
+        hideStatusBar()
 
         binding.btnPokeBelly.setOnClickListener(this)
         binding.btnFoot.setOnClickListener(this)
@@ -39,7 +43,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         initSoundList()
         // 动画集
-        val anim = binding.layoutAnimation.background as AnimationDrawable
+        val anim = binding.layoutAnimation.drawable as AnimationDrawable
         anim.start()
     }
 
@@ -75,8 +79,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             // 当手指离开的时候
             x2 = event.x
             y2 = event.y
-            if (x1 - x2 > 50) { // 向左滑
-            } else if (x2 - x1 > 50) { // 向右滑
+            if (x1 - x2 > 100) { // 向左滑
+            } else if (x2 - x1 > 100) { // 向右滑
                 playAnimation(R.drawable.fart)
                 playSound(soundList[2])
             }
@@ -122,8 +126,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
      * 播放动画
      */
     private fun playAnimation(res: Int) {
-        binding.layoutAnimation.setBackgroundResource(res)
-        val anim = binding.layoutAnimation.background as AnimationDrawable
+        binding.layoutAnimation.setImageResource(res)
+        val anim = binding.layoutAnimation.drawable as AnimationDrawable
         anim.isOneShot = true // 是否播放一次(true将循环一次，然后停止并保持最后一帧。如果它设置为false，则动画将循环)
         if (anim.isRunning) { // 如果动画已经播放过
             anim.stop() // 如果动画运行了，停止动画，动画才可以重新播放
@@ -135,9 +139,20 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             time += anim.getDuration(i)
         }
         Handler(mainLooper).postDelayed({ // 重新设置背景,并播放动画
-            binding.layoutAnimation.setBackgroundResource(R.drawable.breath)
-            val anim2 = binding.layoutAnimation.background as AnimationDrawable
+            binding.layoutAnimation.setImageResource(R.drawable.breath)
+            val anim2 = binding.layoutAnimation.drawable as AnimationDrawable
             anim2.start()
         }, time.toLong())
+    }
+
+    private fun hideStatusBar() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            //window.insetsController?.hide(WindowInsets.Type.statusBars())
+            window.insetsController?.hide(WindowInsets.Type.systemBars())
+        } else {
+            window.setFlags(
+                WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        }
     }
 }
