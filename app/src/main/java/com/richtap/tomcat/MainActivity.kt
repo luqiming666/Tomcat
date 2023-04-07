@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         binding.btnPokeBelly.setOnClickListener(this)
         binding.btnFoot.setOnClickListener(this)
-        binding.btnWeiba.setOnClickListener(this)
+        binding.btnTail.setOnClickListener(this)
         binding.btnLeftFace.setOnClickListener(this)
         binding.btnRightFace.setOnClickListener(this)
 
@@ -67,6 +67,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         soundList.add(3, pool!!.load(this, R.raw.p_belly, 1))
         soundList.add(4, pool!!.load(this, R.raw.p_foot, 1))
         soundList.add(5, pool!!.load(this, R.raw.angry, 1))
+        soundList.add(6, pool!!.load(this, R.raw.miaoaoao, 1))
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
@@ -84,6 +85,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 playAnimation(R.drawable.fart)
                 playSound(soundList[2])
             }
+            if (y2 - y1 > 100) { // 向下滑
+                playAnimation(R.drawable.touch_nose)
+                playSound(soundList[6])
+            }
         }
         return super.onTouchEvent(event)
     }
@@ -99,7 +104,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 playAnimation(R.drawable.poke_foot)
                 playSound(soundList[4])
             }
-            R.id.btn_weiba -> {
+            R.id.btn_tail -> {
                 playAnimation(R.drawable.poke_belly_right)
                 playSound(soundList[5])
             }
